@@ -8,6 +8,7 @@
   **Gazachat Decentralized Bluetooth Communication**
   
   *Connect without internet, communicate without limits*
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
   [![Issues](https://img.shields.io/github/issues/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
     [![Closed Issues](https://img.shields.io/github/issues-closed/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
@@ -15,7 +16,6 @@
   [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
   [![Forks](https://img.shields.io/github/forks/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/network/members)
   [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/stargazers)
-  [![License](https://img.shields.io/github/license/Bloul-Mohamed/gazachat_app?style=for-the-badge)](https://github.com/Bloul-Mohamed/gazachat_app/blob/main/LICENSE)
 </div>
 
 <div align="center">
