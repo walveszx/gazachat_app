@@ -15,7 +15,9 @@
   [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
   [![Forks](https://img.shields.io/github/forks/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/network/members)
   [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/stargazers)
-  [![License](https://img.shields.io/github/license/Bloul-Mohamed/gazachat_app?style=for-the-badge)](LICENSE)
+  
+![GitHub License](https://img.shields.io/github/license/Bloul-Mohamed/gazachat_app)
+
 </div>
 
 <div align="center">
