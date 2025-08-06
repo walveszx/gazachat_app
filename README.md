@@ -9,18 +9,18 @@
   
   *Connect without internet, communicate without limits*
 
-  [![Issues](https://img.shields.io/github/issues/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat/issues)
-    [![Closed Issues](https://img.shields.io/github/issues-closed/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat/issues)
+  [![Issues](https://img.shields.io/github/issues/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
+    [![Closed Issues](https://img.shields.io/github/issues-closed/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
 
-  [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat/graphs/contributors)
-  [![Forks](https://img.shields.io/github/forks/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat/network/members)
-  [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat/stargazers)
-  [![License](https://img.shields.io/github/license/Bloul-Mohamed/gazachat?style=for-the-badge)](LICENSE)
+  [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
+  [![Forks](https://img.shields.io/github/forks/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/network/members)
+  [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/stargazers)
+  [![License](https://img.shields.io/github/license/Bloul-Mohamed/gazachat_app?style=for-the-badge)](LICENSE)
 </div>
 
 <div align="center">
   
-  [![Download from GitHub](https://img.shields.io/badge/Download-GitHub%20Releases-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Bloul-Mohamed/gazachat/releases)
+  [![Download from GitHub](https://img.shields.io/badge/Download-GitHub%20Releases-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Bloul-Mohamed/gazachat_app/releases)
   [![Download APK](https://img.shields.io/badge/Download-Firebase%20APK-FF6B35?style=for-the-badge&logo=firebase&logoColor=white)](https://appdistribution.firebase.dev/i/7c5bc8c5617e8400)
   
   <p><em>Get the latest version of Gazachat for your Android device</em></p>
@@ -119,7 +119,7 @@ Gazachat is a revolutionary **Bluetooth-only communication app** that enables pe
 
 ```bash
 # Clone the repository
-git clone https://github.com/Bloul-Mohamed/gazachat.git
+git clone https://github.com/Bloul-Mohamed/gazachat_app.git
 
 # Navigate to project directory
 cd gazachat
@@ -128,7 +128,7 @@ cd gazachat
 flutter pub get
 
 # Run the app
-flutter run
+flutter run --flavor development
 ```
 
 
@@ -175,7 +175,7 @@ Thanks to all our amazing contributors who make Gazachat better every day!
 
 ### 📊 Contribution Stats
 
-![Contributors](https://contributors-img.web.app/image?repo=Bloul-Mohamed/gazachat)
+![Contributors](https://contributors-img.web.app/image?repo=Bloul-Mohamed/gazachat_app)
 
 ### 🚀 GitHub Contributors Graph
 
@@ -202,8 +202,8 @@ If you find Gazachat useful, please consider:
 ## 📞 Contact
 
 - **Project Lead**: [Bloul Mohamed](https://github.com/Bloul-Mohamed)
-- **Issues**: [GitHub Issues](https://github.com/Bloul-Mohamed/gazachat/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Bloul-Mohamed/gazachat/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Bloul-Mohamed/gazachat_app/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Bloul-Mohamed/gazachat_app/discussions)
 
 ---
 
