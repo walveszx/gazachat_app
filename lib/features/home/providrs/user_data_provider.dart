@@ -101,6 +101,26 @@ class UserDataNotifier extends StateNotifier<AsyncValue<UserData>> {
     }
   }
 
+  // get username by uuid2P 
+  String? getUsernameByUuid(String uuid2P) {
+    return state.when(
+      data: (currentData) {
+        try {
+          return currentData.userChats.chats
+              .firstWhere(
+                (chat) => chat.uuid2P == uuid2P,
+                orElse: () => throw StateError('No element'),
+              )
+              .username2P;
+        } catch (e) {
+          return null; // Return null if chat not found
+        }
+      },
+      loading: () => null,
+      error: (error, stackTrace) => null,
+    );
+  }
+
   // Method to add a new chat to userChats
   Future<void> addChat(UserChat chat) async {
     try {

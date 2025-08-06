@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert'; // Add this import for UTF-8 encoding
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gazachat/core/helpers/logger_debug.dart';
 import 'package:gazachat/core/helpers/shared_prefences.dart';
 import 'package:gazachat/core/shared/models/nearbay_device_info.dart';
 import 'package:gazachat/core/shared/services/bluetooth_services.dart';
+import 'package:gazachat/features/home/services/notifications_service.dart';
 
 // Provider for managing Bluetooth state with discovered and connected devices
 final nearbayStateProvider =
@@ -101,6 +103,12 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
       // Add new device
       final updatedDiscovered = [...state.discoveredDevices, device];
       state = state.copyWith(discoveredDevices: updatedDiscovered);
+      // show notifiication to show user how length of discovered devices
+      NotificationService().showNotification(
+        id: 1, // Unique ID for the notification
+        title: 'device_found_title'.tr(),
+        body: '${updatedDiscovered.length} ${'device_found_body'.tr()}',
+      );
     }
   }
 
@@ -376,4 +384,3 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     super.dispose();
   }
 }
-

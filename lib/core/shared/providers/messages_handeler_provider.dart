@@ -7,6 +7,7 @@ import 'package:gazachat/features/chat/data/enums/message_status.dart';
 import 'package:gazachat/features/chat/data/enums/message_type.dart';
 import 'package:gazachat/features/chat/data/models/chat_message_model.dart';
 import 'package:gazachat/features/home/providrs/user_data_provider.dart';
+import 'package:gazachat/features/home/services/notifications_service.dart';
 
 // Provider to handle incoming Bluetooth messages
 final messageHandlerProvider = Provider<MessageHandler>((ref) {
@@ -105,6 +106,17 @@ class MessageHandler {
       ref
           .read(userDataProvider.notifier)
           .addMessageToChat(senderUsername, incomingMessage);
+      // show notification with the message and sender username
+      // get the current user username
+      final realUsernameSender = ref
+          .read(userDataProvider.notifier)
+          .getUsernameByUuid(senderUsername);
+      LoggerDebug.logger.e('usernameSender: $senderId');
+      NotificationService().showNotification(
+        id: 2,
+        title: realUsernameSender ?? 'Notify All Area Allert',
+        body: text,
+      );
 
       LoggerDebug.logger.d(
         'Added incoming message to chat with $senderUsername: ${text.length} chars',
