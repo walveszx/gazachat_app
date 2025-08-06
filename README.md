@@ -9,12 +9,12 @@
   
   *Connect without internet, communicate without limits*
 
-  [![Issues](https://img.shields.io/github/issues/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
-    [![Closed Issues](https://img.shields.io/github/issues-closed/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
+  [![Issues](https://img.shields.io/github/issues/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
+    [![Closed Issues](https://img.shields.io/github/issues-closed/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
 
-  [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
+  [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
   [![Forks](https://img.shields.io/github/forks/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/network/members)
-  [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/stargazers)
+  [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/stargazers)
   [![License](https://img.shields.io/github/license/Bloul-Mohamed/gazachat_app?style=for-the-badge)](LICENSE)
 </div>
 
@@ -104,7 +104,7 @@ Gazachat is a revolutionary **Bluetooth-only communication app** that enables pe
 - **Language**: Dart
 - **Connectivity**: Bluetooth Low Energy (BLE)
 - **Architecture**: Clean Architecture with BLoC pattern
-- **Platform**: Android & iOS
+- **Platform**: Android (IOS support in progress)
 
 ## 🚀 Quick Start
 
@@ -119,7 +119,7 @@ Gazachat is a revolutionary **Bluetooth-only communication app** that enables pe
 
 ```bash
 # Clone the repository
-git clone https://github.com/Bloul-Mohamed/gazachat_app.git
+git clone https://github.com/Bloul-Mohamed/gazachat_app.git "gazachat"
 
 # Navigate to project directory
 cd gazachat
@@ -146,7 +146,7 @@ We welcome contributions from the community! Gazachat is an open-source project 
 
 ### 🐛 Found a Bug?
 
-If you find a bug, please [open an issue](https://github.com/Bloul-Mohamed/gazachat/issues/new) with:
+If you find a bug, please [open an issue](https://github.com/Bloul-Mohamed/gazachat_app/issues/new) with:
 - Clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior
@@ -154,7 +154,7 @@ If you find a bug, please [open an issue](https://github.com/Bloul-Mohamed/gazac
 
 ### 💡 Feature Requests
 
-Have an idea? We'd love to hear it! [Open a feature request](https://github.com/Bloul-Mohamed/gazachat/issues/new) and let's discuss.
+Have an idea? We'd love to hear it! [Open a feature request](https://github.com/Bloul-Mohamed/gazachat_app/issues/new) and let's discuss.
 
 ## 📋 Roadmap
 
@@ -179,7 +179,7 @@ Thanks to all our amazing contributors who make Gazachat better every day!
 
 ### 🚀 GitHub Contributors Graph
 
-[![GitHub Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat/graphs/contributors)
+[![GitHub Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
 
 <div align="center">
   <em>Click on any contributor image above to see their GitHub profile!</em>
