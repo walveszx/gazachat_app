@@ -376,4 +376,3 @@ class _ConnectionsSectionWidgetState
     super.dispose();
   }
 }
-

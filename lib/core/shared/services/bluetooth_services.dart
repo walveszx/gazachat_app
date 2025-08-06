@@ -214,4 +214,3 @@ class BluetoothServicesGazachat {
     _messageReceivedController.close();
   }
 }
-

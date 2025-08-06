@@ -43,8 +43,27 @@ class MessageHandler {
 
       LoggerDebug.logger.d('Processing message from $senderId: $rawMessage');
 
-      // Parse the JSON message
-      final Map<String, dynamic> messageJson = jsonDecode(rawMessage);
+      // Decode the message properly for UTF-8 support
+      Map<String, dynamic> messageJson;
+
+      try {
+        // First, try to decode as base64 (if you're using base64 encoding)
+        List<int> decodedBytes = base64Decode(rawMessage);
+        String decodedString = utf8.decode(decodedBytes);
+        messageJson = jsonDecode(decodedString);
+      } catch (e) {
+        // Fallback to direct JSON decode (for backward compatibility)
+        try {
+          messageJson = jsonDecode(rawMessage);
+        } catch (e2) {
+          // If direct decode fails, try UTF-8 decode first
+          List<int> messageBytes = rawMessage.codeUnits;
+          String utf8String = utf8.decode(messageBytes, allowMalformed: true);
+          messageJson = jsonDecode(utf8String);
+        }
+      }
+
+      LoggerDebug.logger.f('Decoded message test: $messageJson');
 
       // Extract message details
       final String messageId = messageJson['id'] ?? '';
@@ -75,21 +94,20 @@ class MessageHandler {
       // Create ChatMessage object
       final ChatMessage incomingMessage = ChatMessage(
         id: messageId,
-        text: text,
-        isSentByMe: false, // This is a received message
+        text: text, // Arabic text should now be properly decoded
+        isSentByMe: false,
         timestamp: timestamp,
         status: MessageStatus.delivered,
         type: messageType,
       );
 
       // Add message to the appropriate chat
-      // The senderUsername is the person who sent this message to us
       ref
           .read(userDataProvider.notifier)
           .addMessageToChat(senderUsername, incomingMessage);
 
       LoggerDebug.logger.d(
-        'Added incoming message to chat with $senderUsername',
+        'Added incoming message to chat with $senderUsername: ${text.length} chars',
       );
     } catch (e) {
       LoggerDebug.logger.e('Error processing incoming message: $e');
@@ -112,4 +130,3 @@ final messageHandlerInitProvider = Provider<void>((ref) {
 
   return;
 });
-

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert'; // Add this import for UTF-8 encoding
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gazachat/core/helpers/logger_debug.dart';
 import 'package:gazachat/core/helpers/shared_prefences.dart';
@@ -83,8 +84,6 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     _messageReceivedSubscription = _bluetoothService.onMessageReceived.listen((
       messageData,
     ) {
-      // call my provider to handle the message
-
       LoggerDebug.logger.d(
         'Message received: ${messageData['message']} from ${messageData['senderId']}',
       );
@@ -238,9 +237,19 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     }
   }
 
+  /// Enhanced message sending with UTF-8 encoding support
   Future<bool> sendMessageToDevice(String deviceId, String message) async {
     try {
-      final result = await _bluetoothService.sendMessage(deviceId, message);
+      // Encode message to handle Arabic characters properly
+      final encodedMessage = _encodeMessage(message);
+
+      LoggerDebug.logger.d('Sending message to $deviceId: $message');
+      LoggerDebug.logger.d('Encoded message length: ${encodedMessage.length}');
+
+      final result = await _bluetoothService.sendMessage(
+        deviceId,
+        encodedMessage,
+      );
       LoggerDebug.logger.d('Message send result to $deviceId: $result');
       return result;
     } catch (e) {
@@ -249,12 +258,91 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     }
   }
 
+  /// Enhanced message broadcasting with UTF-8 encoding support
   Future<void> sendMessageToAll(String message) async {
     try {
-      await _bluetoothService.sendMessageToAll(message);
+      // Encode message to handle Arabic characters properly
+      final encodedMessage = _encodeMessage(message);
+
+      LoggerDebug.logger.d('Broadcasting message: $message');
+      LoggerDebug.logger.d('Encoded message length: ${encodedMessage.length}');
+
+      await _bluetoothService.sendMessageToAll(encodedMessage);
       LoggerDebug.logger.d('Message sent to all connected devices');
     } catch (e) {
       LoggerDebug.logger.e('Error sending message to all devices: $e');
+    }
+  }
+
+  /// Encodes message for proper UTF-8 transmission over Bluetooth
+  String _encodeMessage(String message) {
+    try {
+      // Method 1: Base64 encoding (recommended for Bluetooth)
+      final utf8Bytes = utf8.encode(message);
+      final base64Encoded = base64Encode(utf8Bytes);
+
+      LoggerDebug.logger.d('Original message: $message');
+      LoggerDebug.logger.d('UTF-8 bytes: $utf8Bytes');
+      LoggerDebug.logger.d('Base64 encoded: $base64Encoded');
+
+      return base64Encoded;
+    } catch (e) {
+      LoggerDebug.logger.e('Error encoding message: $e');
+      // Fallback to original message
+      return message;
+    }
+  }
+
+  /// Alternative encoding method if base64 doesn't work with your Bluetooth service
+  String _encodeMessageAlternative(String message) {
+    try {
+      // Method 2: URL encoding for special characters
+      final encoded = Uri.encodeComponent(message);
+      LoggerDebug.logger.d('URL encoded message: $encoded');
+      return encoded;
+    } catch (e) {
+      LoggerDebug.logger.e('Error encoding message with URI: $e');
+      return message;
+    }
+  }
+
+  /// Send a structured message (for chat messages with metadata)
+  Future<bool> sendChatMessage(
+    String deviceId,
+    Map<String, dynamic> messageData,
+  ) async {
+    try {
+      // Convert message data to JSON
+      final jsonString = jsonEncode(messageData);
+
+      // Encode the JSON string for safe transmission
+      final encodedMessage = _encodeMessage(jsonString);
+
+      LoggerDebug.logger.d('Sending chat message to $deviceId');
+      LoggerDebug.logger.d('Message data: $messageData');
+
+      return await sendMessageToDevice(deviceId, encodedMessage);
+    } catch (e) {
+      LoggerDebug.logger.e('Error sending chat message: $e');
+      return false;
+    }
+  }
+
+  /// Broadcast a structured message to all connected devices
+  Future<void> broadcastChatMessage(Map<String, dynamic> messageData) async {
+    try {
+      // Convert message data to JSON
+      final jsonString = jsonEncode(messageData);
+
+      // Encode the JSON string for safe transmission
+      final encodedMessage = _encodeMessage(jsonString);
+
+      LoggerDebug.logger.d('Broadcasting chat message');
+      LoggerDebug.logger.d('Message data: $messageData');
+
+      await sendMessageToAll(encodedMessage);
+    } catch (e) {
+      LoggerDebug.logger.e('Error broadcasting chat message: $e');
     }
   }
 
@@ -288,3 +376,4 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     super.dispose();
   }
 }
+
