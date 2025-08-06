@@ -8,6 +8,7 @@ import 'package:gazachat/core/shared/providers/messages_handeler_provider.dart';
 import 'package:gazachat/core/theming/colors.dart';
 import 'package:gazachat/core/widgets/loading_animation.dart';
 import 'package:gazachat/features/chat/data/enums/message_status.dart';
+import 'package:gazachat/features/chat/data/enums/message_type.dart';
 import 'package:gazachat/features/home/providrs/user_data_provider.dart';
 import 'package:gazachat/features/home/services/nearby_premission.dart';
 import 'package:gazachat/features/home/ui/widgets/add_new_contact_box.dart';
@@ -190,8 +191,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         return ChatRowData(
           userData2P: chat,
           userName: chat.username2P,
+          // check if message is location type show location word else that message text
           lastMessage: chat.messages.isNotEmpty
-              ? chat.messages.last.text
+              ? chat.messages.last.type == MessageType.location
+                    ? '⟟ ${orContext.tr("location")}'
+                    : chat.messages.last.text
               : orContext.tr("no_messages"),
           time: chat.messages.isNotEmpty ? chat.messages.last.timestamp : null,
           isOnline: isOnline, // Now dynamically set based on discovery
@@ -214,3 +218,4 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.dispose();
   }
 }
+

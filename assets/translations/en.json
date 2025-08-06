@@ -135,7 +135,8 @@
   "connected": "Connected",
   "disconnected": "Disconnected",
   "connect" : "Connect",
-  "connect_all": "Connect All"
+  "connect_all": "Connect All",
+  "connecting": "Connecting..."
 
 } 
 

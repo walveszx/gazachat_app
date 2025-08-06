@@ -17,7 +17,6 @@ import 'package:gazachat/features/chat/ui/widgets/custom_text_input_field.dart';
 import 'package:gazachat/features/chat/ui/widgets/message_bubble_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gazachat/features/chat/ui/widgets/no_message_yet.dart';
-import 'package:gazachat/features/home/data/models/user_data_model.dart';
 import 'package:gazachat/features/home/providrs/user_data_provider.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -300,4 +299,3 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           );
   }
 }
-

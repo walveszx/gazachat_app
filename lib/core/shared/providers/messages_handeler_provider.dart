@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gazachat/core/helpers/logger_debug.dart';
 import 'package:gazachat/core/shared/providers/managing_bluetooth_state_privder.dart';
@@ -114,8 +115,11 @@ class MessageHandler {
       LoggerDebug.logger.e('usernameSender: $senderId');
       NotificationService().showNotification(
         id: 2,
+        // '⟟ ${orContext.tr("location")} check if type of message is location or not',
         title: realUsernameSender ?? 'Notify All Area Allert',
-        body: text,
+        body: incomingMessage.type == MessageType.location
+            ? '⟟ ${tr("location")}'
+            : incomingMessage.text,
       );
 
       LoggerDebug.logger.d(

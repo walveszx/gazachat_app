@@ -135,6 +135,7 @@
   "connected": "متصل",
   "disconnected": "غير متصل",
   "connect": "اتصل",
-    "connect_all": "اتصل بكل الأجهزة"
+    "connect_all": "اتصل بكل الأجهزة",
+  "connecting": "عم نتصل..."
     
 }

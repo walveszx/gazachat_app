@@ -22,6 +22,10 @@ class _ConnectionsSectionWidgetState
   bool _isExpanded = false;
   final int _maxVisibleDevices = 3; // Show only 3 devices initially
 
+  // Loading states
+  bool _isConnectingAll = false;
+  final Set<String> _connectingDevices = <String>{};
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +56,69 @@ class _ConnectionsSectionWidgetState
     return username.username2P;
   }
 
+  // Handle individual device connection
+  Future<void> _connectToDevice(String deviceId, String uuid) async {
+    setState(() {
+      _connectingDevices.add(deviceId);
+    });
+
+    try {
+      await ref
+          .read(nearbayStateProvider.notifier)
+          .connectToDevice(deviceId, uuid);
+
+      // Wait a bit for the connection to establish
+      await Future.delayed(const Duration(seconds: 2));
+    } catch (e) {
+      // Handle connection error if needed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to connect to device: $e'),
+          backgroundColor: ColorsManager.customRed,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _connectingDevices.remove(deviceId);
+        });
+      }
+    }
+  }
+
+  // Handle connect all devices
+  Future<void> _connectToAllDevices() async {
+    setState(() {
+      _isConnectingAll = true;
+    });
+
+    try {
+      await ref
+          .read(nearbayStateProvider.notifier)
+          .connectToAllDiscoveredDevices();
+
+      // Wait a bit for connections to establish
+      await Future.delayed(const Duration(seconds: 3));
+    } catch (e) {
+      // Handle connection error if needed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to connect to all devices: $e'),
+          backgroundColor: ColorsManager.customRed,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isConnectingAll = false;
+        });
+      }
+    }
+  }
+
   Widget _buildDeviceItem(dynamic device, bool isConnected) {
+    final isConnecting = _connectingDevices.contains(device.id);
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 2.h),
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
@@ -76,6 +142,8 @@ class _ConnectionsSectionWidgetState
               shape: BoxShape.circle,
               color: isConnected
                   ? ColorsManager.customGreen
+                  : isConnecting
+                  ? ColorsManager.customOrange
                   : ColorsManager.customOrange,
             ),
           ),
@@ -97,23 +165,43 @@ class _ConnectionsSectionWidgetState
           if (!isConnected) ...[
             SizedBox(width: 8.w),
             GestureDetector(
-              onTap: () {
-                ref
-                    .read(nearbayStateProvider.notifier)
-                    .connectToDevice(device.id, device.uuid);
-              },
+              onTap: isConnecting
+                  ? null
+                  : () => _connectToDevice(device.id, device.uuid),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
-                  color: ColorsManager.mainColor.withOpacity(0.8),
+                  color: isConnecting
+                      ? ColorsManager.mainColor.withOpacity(0.6)
+                      : ColorsManager.mainColor.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(6.r),
                 ),
-                child: Text(
-                  context.tr("connect"),
-                  style: CustomTextStyles.font12WhiteRegular.copyWith(
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (isConnecting) ...[
+                      SizedBox(
+                        width: 12.w,
+                        height: 12.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            ColorsManager.whiteColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                    ],
+                    Text(
+                      isConnecting
+                          ? context.tr("connecting")
+                          : context.tr("connect"),
+                      style: CustomTextStyles.font12WhiteRegular.copyWith(
+                        fontSize: 9.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -226,7 +314,21 @@ class _ConnectionsSectionWidgetState
         // Reset expansion state when bluetooth is turned off
         setState(() {
           _isExpanded = false;
+          _isConnectingAll = false;
+          _connectingDevices.clear();
         });
+      }
+    });
+
+    // Listen for connection changes to stop loading indicators
+    ref.listen(nearbayStateProvider, (previous, current) {
+      if (previous != null &&
+          current.connectedDevices.length > previous.connectedDevices.length) {
+        // New device connected, remove from connecting list
+        for (final device in current.connectedDevices) {
+          _connectingDevices.remove(device.id);
+        }
+        setState(() {});
       }
     });
 
@@ -293,25 +395,42 @@ class _ConnectionsSectionWidgetState
                       constraints.maxWidth > 300.w) ...[
                     SizedBox(width: 8.w),
                     GestureDetector(
-                      onTap: () {
-                        ref
-                            .read(nearbayStateProvider.notifier)
-                            .connectToAllDiscoveredDevices();
-                      },
+                      onTap: _isConnectingAll ? null : _connectToAllDevices,
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.w,
                           vertical: 4.h,
                         ),
                         decoration: BoxDecoration(
-                          color: ColorsManager.mainColor,
+                          color: _isConnectingAll
+                              ? ColorsManager.mainColor.withOpacity(0.6)
+                              : ColorsManager.mainColor,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: Text(
-                          context.tr("connect_all"),
-                          style: CustomTextStyles.font12WhiteRegular.copyWith(
-                            fontSize: 10.sp,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_isConnectingAll) ...[
+                              SizedBox(
+                                width: 14.w,
+                                height: 14.w,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    ColorsManager.whiteColor,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                            ],
+                            Text(
+                              _isConnectingAll
+                                  ? context.tr("connecting")
+                                  : context.tr("connect_all"),
+                              style: CustomTextStyles.font12WhiteRegular
+                                  .copyWith(fontSize: 10.sp),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -376,3 +495,4 @@ class _ConnectionsSectionWidgetState
     super.dispose();
   }
 }
+
