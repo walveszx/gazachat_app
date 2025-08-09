@@ -84,7 +84,7 @@ class _CustomTextInputFieldState extends ConsumerState<CustomTextInputField> {
       _textController.clear();
 
       // Remove focus and hide emoji picker
-      _focusNode.unfocus();
+      //      _focusNode.unfocus();
       if (_showEmojiPicker) {
         setState(() {
           _showEmojiPicker = false;

@@ -61,6 +61,16 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
   StreamSubscription<NearbayDeviceInfo>? _deviceConnectedSubscription;
   StreamSubscription<Map<String, String>>? _messageReceivedSubscription;
 
+  // Method to get UUID by device ID - delegates to bluetooth service
+  String? getUuidByDeviceId(String deviceId) {
+    return _bluetoothService.getUuidByDeviceId(deviceId);
+  }
+
+  // Method to get discovered device info by device ID
+  NearbayDeviceInfo? getDiscoveredDeviceById(String deviceId) {
+    return _bluetoothService.getDiscoveredDeviceById(deviceId);
+  }
+
   void _initializeListeners() {
     // Listen for discovered devices
     _deviceFoundSubscription = _bluetoothService.onDeviceFound.listen((device) {
@@ -78,7 +88,9 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     _deviceConnectedSubscription = _bluetoothService.onDeviceConnected.listen((
       device,
     ) {
-      LoggerDebug.logger.d('Device connected: ${device.id}');
+      LoggerDebug.logger.d(
+        'Device connected: ${device.id} with UUID: ${device.uuid}',
+      );
       _addConnectedDevice(device);
     });
 
@@ -372,6 +384,8 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
 
   void clearAllDevices() {
     state = state.copyWith(discoveredDevices: [], connectedDevices: []);
+    // Also clear the bluetooth service cache
+    _bluetoothService.clearDiscoveredDevices();
   }
 
   @override
@@ -384,3 +398,4 @@ class BluetoothStateNotifier extends StateNotifier<BluetoothState> {
     super.dispose();
   }
 }
+

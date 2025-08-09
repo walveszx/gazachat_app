@@ -27,7 +27,7 @@ class BluetoothStatusIndicator extends StatelessWidget {
                       : context.tr("bluetooth_disconnected"),
                 ),
                 backgroundColor: next
-                    ? ColorsManager.customGreen
+                    ? Colors.green
                     : ColorsManager.customOrange,
                 duration: Duration(seconds: 2),
               ),
@@ -39,13 +39,11 @@ class BluetoothStatusIndicator extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
           decoration: BoxDecoration(
             color: isBluetoothOn
-                ? ColorsManager.customGreen.withOpacity(0.2)
+                ? Colors.green.withOpacity(0.2)
                 : ColorsManager.customOrange.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: isBluetoothOn
-                  ? ColorsManager.customGreen
-                  : ColorsManager.customOrange,
+              color: isBluetoothOn ? Colors.green : ColorsManager.customOrange,
               width: 1,
             ),
           ),
@@ -58,7 +56,7 @@ class BluetoothStatusIndicator extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isBluetoothOn
-                      ? ColorsManager.customGreen
+                      ? Colors.green
                       : ColorsManager.customOrange,
                 ),
               ),
@@ -67,7 +65,7 @@ class BluetoothStatusIndicator extends StatelessWidget {
                 isBluetoothOn ? context.tr("online") : context.tr("offline"),
                 style: CustomTextStyles.font12WhiteRegular.copyWith(
                   color: isBluetoothOn
-                      ? ColorsManager.customGreen
+                      ? Colors.green
                       : ColorsManager.customOrange,
                   fontWeight: FontWeight.w500,
                   fontSize: 10.sp,

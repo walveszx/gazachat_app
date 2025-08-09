@@ -15,6 +15,9 @@ class BluetoothServicesGazachat {
   final StreamController<Map<String, String>> _messageReceivedController =
       StreamController<Map<String, String>>.broadcast();
 
+  // Store discovered devices for UUID lookup
+  final Map<String, NearbayDeviceInfo> _discoveredDevices = {};
+
   // Getters for streams
   Stream<NearbayDeviceInfo> get onDeviceFound => _deviceFoundController.stream;
   Stream<String> get onDeviceLost => _deviceLostController.stream;
@@ -22,6 +25,16 @@ class BluetoothServicesGazachat {
       _deviceConnectedController.stream;
   Stream<Map<String, String>> get onMessageReceived =>
       _messageReceivedController.stream;
+
+  // Method to get UUID by device ID from discovered devices
+  String? getUuidByDeviceId(String deviceId) {
+    return _discoveredDevices[deviceId]?.uuid;
+  }
+
+  // Method to get discovered device info by device ID
+  NearbayDeviceInfo? getDiscoveredDeviceById(String deviceId) {
+    return _discoveredDevices[deviceId];
+  }
 
   // start advertising
   Future<void> startAdvertising(String userName) async {
@@ -43,13 +56,20 @@ class BluetoothServicesGazachat {
           LoggerDebug.logger.w(
             'Connection result: $id, Status: ${status.toString()}',
           );
+          //TODO: solve the problem get uuid from discovered devices (create a new method to get uuid by device id)
           if (status == Status.CONNECTED) {
+            // Try to get the uuid from discovered devices
+            String deviceUuid = getUuidByDeviceId(id) ?? '';
+
+            LoggerDebug.logger.f('Connected device ID: $id, UUID: $deviceUuid');
+
             // Add connected device to stream
             final device = NearbayDeviceInfo(
               id: id,
-              uuid: '', // We'll get this from the connection info or messages
+              uuid: deviceUuid,
               serviceId: "free.palestine.gazachat",
             );
+
             _deviceConnectedController.add(device);
           }
         },
@@ -57,6 +77,8 @@ class BluetoothServicesGazachat {
           // Called whenever a discoverer disconnects from advertiser
           LoggerDebug.logger.w('Disconnected from: $id');
           _deviceLostController.add(id);
+          // Remove from discovered devices cache
+          _discoveredDevices.remove(id);
         },
         serviceId: "free.palestine.gazachat", // uniquely identifies your app
       );
@@ -85,15 +107,18 @@ class BluetoothServicesGazachat {
             uuid: userName, // Using userName as UUID
             serviceId: serviceId,
           );
-          _deviceFoundController.add(device);
 
-          // DO NOT automatically request connection here
-          // Let the UI or user decide when to connect
+          // Store in discovered devices cache for later lookup
+          _discoveredDevices[id] = device;
+
+          _deviceFoundController.add(device);
         },
         onEndpointLost: (String? id) {
           LoggerDebug.logger.w('Endpoint lost: $id');
           if (id != null) {
             _deviceLostController.add(id);
+            // Remove from discovered devices cache
+            _discoveredDevices.remove(id);
           }
         },
         serviceId: "free.palestine.gazachat",
@@ -117,6 +142,8 @@ class BluetoothServicesGazachat {
   Future<void> stopDiscovery() async {
     try {
       await Nearby().stopDiscovery();
+      // Clear discovered devices cache when stopping discovery
+      _discoveredDevices.clear();
       LoggerDebug.logger.d('Stopped discovery');
     } catch (e) {
       LoggerDebug.logger.e('Error stopping discovery: $e');
@@ -139,9 +166,12 @@ class BluetoothServicesGazachat {
         onConnectionResult: (String id, Status status) {
           LoggerDebug.logger.w('Connection result: $id, Status: $status');
           if (status == Status.CONNECTED) {
+            // Try to get the uuid from discovered devices, fallback to userName parameter
+            String deviceUuid = getUuidByDeviceId(id) ?? userName;
+
             final device = NearbayDeviceInfo(
               id: id,
-              uuid: userName, // Use the username passed in
+              uuid: deviceUuid,
               serviceId: "free.palestine.gazachat",
             );
             _deviceConnectedController.add(device);
@@ -150,6 +180,8 @@ class BluetoothServicesGazachat {
         onDisconnected: (String id) {
           LoggerDebug.logger.w('Disconnected from: $id');
           _deviceLostController.add(id);
+          // Remove from discovered devices cache
+          _discoveredDevices.remove(id);
         },
       );
     } catch (e) {
@@ -206,11 +238,21 @@ class BluetoothServicesGazachat {
     }
   }
 
+  // Get all discovered devices
+  Map<String, NearbayDeviceInfo> get discoveredDevices =>
+      Map.from(_discoveredDevices);
+
+  // Clear discovered devices cache
+  void clearDiscoveredDevices() {
+    _discoveredDevices.clear();
+  }
+
   // Dispose streams
   void dispose() {
     _deviceFoundController.close();
     _deviceLostController.close();
     _deviceConnectedController.close();
     _messageReceivedController.close();
+    _discoveredDevices.clear();
   }
 }

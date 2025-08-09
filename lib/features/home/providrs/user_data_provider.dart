@@ -101,7 +101,72 @@ class UserDataNotifier extends StateNotifier<AsyncValue<UserData>> {
     }
   }
 
-  // get username by uuid2P 
+  // Method to get get uuid by deivceId
+  String? getUuidByDeviceId(String deviceId) {
+    return state.when(
+      data: (currentData) {
+        try {
+          return currentData.userChats.chats
+              .firstWhere(
+                (chat) => chat.uuid2P == deviceId,
+                orElse: () => throw StateError('No element'),
+              )
+              .uuid2P;
+        } catch (e) {
+          return null; // Return null if chat not found
+        }
+      },
+      loading: () => null,
+      error: (error, stackTrace) => null,
+    );
+  }
+
+  // update deivceId by uuid2P
+  Future<void> updateDeviceIdByUuid(String uuid2P, String newDeviceId) async {
+    try {
+      await state.when(
+        data: (currentData) async {
+          // Find the chat by uuid2P and update its deviceId
+          final updatedChats = currentData.userChats.chats.map((chat) {
+            if (chat.uuid2P == uuid2P) {
+              return chat.copyWith(uuid2P: newDeviceId);
+            }
+            return chat;
+          }).toList();
+
+          final updatedUserChats = AllChat(
+            policy: currentData.userChats.policy,
+            chats: updatedChats,
+          );
+
+          // Update the state
+          final updatedData = currentData.copyWith(userChats: updatedUserChats);
+          state = AsyncValue.data(updatedData);
+
+          // Save to SharedPreferences
+          await SharedPrefHelper.setData(
+            'userChats',
+            updatedUserChats.toJson(),
+          );
+        },
+        loading: () async {
+          LoggerDebug.logger.w(
+            'Cannot update device ID while loading user data',
+          );
+        },
+        error: (error, stackTrace) async {
+          LoggerDebug.logger.e(
+            'Cannot update device ID due to error in user data: $error',
+          );
+        },
+      );
+    } catch (error, stackTrace) {
+      LoggerDebug.logger.e('Error updating device ID: $error');
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  // get username by uuid2P
   String? getUsernameByUuid(String uuid2P) {
     return state.when(
       data: (currentData) {
