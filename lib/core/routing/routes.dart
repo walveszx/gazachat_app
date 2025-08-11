@@ -4,4 +4,5 @@ class RoutesManager {
   static const String qrScannerScreen = '/qrScannerScreen';
   static const String chatScreen = '/chatScreen';
   static const String homeScreen = '/homeScreen';
+  static const String lockScreen = '/lockScreen';
 }

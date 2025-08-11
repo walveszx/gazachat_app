@@ -136,7 +136,26 @@
   "disconnected": "Disconnected",
   "connect" : "Connect",
   "connect_all": "Connect All",
-  "connecting": "Connecting..."
+  "connecting": "Connecting...",
+
+
+    "set_new_pin": "Set New PIN",
+  "confirm_pin": "Confirm PIN", 
+  "enter_pin": "Enter PIN",
+  "create_pin_description": "Create a 4-digit PIN to secure your app",
+  "confirm_pin_description": "Re-enter your PIN to confirm",
+  "enter_pin_description": "Enter your PIN to unlock the app",
+  "pin_set_success": "PIN set successfully!",
+  "pin_mismatch": "PINs don't match. Try again.",
+  "incorrect_pin": "Incorrect PIN. Try again.",
+  "pin_correct": "PIN correct! Unlocking...",
+  "forgot_pin": "Forgot PIN?",
+  "reset_pin": "Reset PIN",
+  "reset_pin_description": "This will delete your current PIN and allow you to set a new one.",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "cancel_lock": "Cancel Lock"
+
 
 } 
 

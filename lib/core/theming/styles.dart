@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gazachat/core/helpers/logger_debug.dart';
+import 'package:gazachat/core/theming/colors.dart';
 import 'package:gazachat/core/theming/font_weight_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,6 +14,30 @@ class CustomTextStyles {
     _currentLocale = locale;
     LoggerDebug.logger.t('Locale updated to: $_currentLocale');
   }
+
+  static TextStyle get font24WhiteBold => TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: ColorsManager.whiteColor,
+  );
+
+  static TextStyle get font18WhiteMedium => const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: ColorsManager.whiteColor,
+  );
+
+  static TextStyle get font14WhiteMedium => const TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: ColorsManager.whiteColor,
+  );
+
+  static TextStyle get font14WhiteRegular => const TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: ColorsManager.whiteColor,
+  );
 
   // Helper method to get the appropriate font based on current locale
   static TextStyle _getTextStyle({

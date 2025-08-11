@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gazachat/core/helpers/extensions.dart';
+import 'package:gazachat/core/routing/routes.dart';
 import 'package:gazachat/core/theming/styles.dart';
 import 'package:gazachat/core/widgets/feature_unavailable_dialog.dart';
 import 'package:gazachat/core/widgets/loading_animation.dart';
@@ -35,6 +36,7 @@ class UserSetting extends ConsumerWidget {
               ),
             ),
             // Options
+            
             ListTile(
               leading: Image.asset(
                 'assets/icons/language-square.png',
@@ -113,3 +115,4 @@ class UserSetting extends ConsumerWidget {
     );
   }
 }
+

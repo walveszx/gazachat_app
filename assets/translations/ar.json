@@ -136,6 +136,24 @@
   "disconnected": "غير متصل",
   "connect": "اتصل",
     "connect_all": "اتصل بكل الأجهزة",
-  "connecting": "عم نتصل..."
+  "connecting": "عم نتصل...",
+   "set_new_pin": "تعيين رمز PIN جديد",
+  "confirm_pin": "تأكيد رمز PIN", 
+  "enter_pin": "أدخل رمز PIN",
+  "create_pin_description": "أنشئ رمز PIN مكون من 4 أرقام لحماية تطبيقك",
+  "confirm_pin_description": "أعد إدخال رمز PIN الخاص بك للتأكيد",
+  "enter_pin_description": "أدخل رمز PIN الخاص بك لإلغاء قفل التطبيق",
+  "pin_set_success": "تم تعيين رمز PIN بنجاح!",
+  "pin_mismatch": "رموز PIN غير متطابقة. حاول مرة أخرى.",
+  "incorrect_pin": "رمز PIN غير صحيح. حاول مرة أخرى.",
+  "pin_correct": "رمز PIN صحيح! جاري إلغاء القفل...",
+  "forgot_pin": "نسيت رمز PIN؟",
+  "reset_pin": "إعادة تعيين رمز PIN",
+  "reset_pin_description": "سيؤدي هذا إلى حذف رمز PIN الحالي والسماح لك بتعيين رمز جديد.",
+  "cancel": "إلغاء",
+  "reset": "إعادة تعيين",
+  "passcode_lock": "قفل رمز المرور",
+  "passcode_description": "أدخل رمز المرور لإلغاء قفل التطبيق",
+  "cancel_lock": "إلغاء القفل"
     
 }
